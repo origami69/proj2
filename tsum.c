@@ -62,7 +62,16 @@ typedef struct {
  * stays in a register and the struct field does not. */
 static void *sum_range(void *arg)
 {
+<<<<<<< HEAD
     (void)arg;
+=======
+    targ_t *data = (targ_t *)arg;
+    double partial = 0;
+    for (int i = data->lo; i < data->hi; i++){
+        partial += work(data->x[i]);
+    }
+    data->partial = partial;
+>>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     return NULL;
 }
 
@@ -76,6 +85,7 @@ static int run_once(double *x, long n, int nthreads,
     *fill_out = now_sec() - t0;
 
     double t1 = now_sec();
+<<<<<<< HEAD
 
     /* TODO A2 -- allocate an array of nthreads pthread_t and an array of
      * nthreads targ_t.
@@ -95,6 +105,44 @@ static int run_once(double *x, long n, int nthreads,
 
     *sum_out   = now_sec() - t1;
     *total_out = total;
+=======
+    //this will setup the thread array and the structs
+    pthread_t workers[nthreads];
+    targ_t *setters = malloc(nthreads * sizeof(targ_t));
+    if (!setters) { fprintf(stderr, "tsum: cannot allocate %ld array of structs\n", n); return -1; }
+    int rc;
+    //loop that creates the threads and sets the structs for each thread
+    for (int i = 0; i < nthreads; i++){
+        //setup the structs
+        setters[i].lo = ((long)i * n) / nthreads;
+        setters[i].hi = ((long)(i + 1) * n) / nthreads;
+        setters[i].x = x;
+        //make thread and see if made succesfully according to section 4.6
+        rc = pthread_create(&workers[i], NULL, sum_range, &setters[i]);
+        if(rc != 0){
+            fprintf(stderr, "tsum: pthread_create for thread %d: %s\n", i, strerror(rc));
+            free(setters);
+            return -1;
+        }
+    }
+    //join threads
+    for (int i = 0; i < nthreads; i++){
+        rc = pthread_join(workers[i], NULL);
+        if(rc != 0){
+            fprintf(stderr, "tsum: pthread_create for thread %d: %s\n", i, strerror(rc));
+            free(setters);
+            return -1;
+        }
+    }
+    double total = 0.0;
+    for (int i = 0; i < nthreads; i++){
+        total += setters[i].partial;
+    }
+    *sum_out   = now_sec() - t1;
+    (void)nthreads;
+    *total_out = total;
+    free(setters);
+>>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     return 0;
 }
 
@@ -102,7 +150,10 @@ int main(int argc, char **argv)
 {
     long n = 20000000;
     int nthreads = 1, reps = 3;
+<<<<<<< HEAD
 
+=======
+>>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--threads") && i + 1 < argc)    nthreads = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--n") && i + 1 < argc)     n        = atol(argv[++i]);

@@ -62,16 +62,12 @@ typedef struct {
  * stays in a register and the struct field does not. */
 static void *sum_range(void *arg)
 {
-<<<<<<< HEAD
-    (void)arg;
-=======
     targ_t *data = (targ_t *)arg;
     double partial = 0;
     for (int i = data->lo; i < data->hi; i++){
         partial += work(data->x[i]);
     }
     data->partial = partial;
->>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     return NULL;
 }
 
@@ -85,27 +81,6 @@ static int run_once(double *x, long n, int nthreads,
     *fill_out = now_sec() - t0;
 
     double t1 = now_sec();
-<<<<<<< HEAD
-
-    /* TODO A2 -- allocate an array of nthreads pthread_t and an array of
-     * nthreads targ_t.
-     *
-     * TODO A3 -- create the threads.  Give thread k the range
-     *     lo = (long)k * n / nthreads,  hi = (long)(k + 1) * n / nthreads
-     * so the ranges tile [0, n) exactly: no gap, no overlap, and the last
-     * thread absorbs the remainder when nthreads does not divide n.
-     * Check the return value of pthread_create.  It returns an error NUMBER
-     * on failure.  It does not return -1 and it does not set errno, which is
-     * Bug 4 in Part B.  Turn the number into text with strerror(rc).
-     *
-     * TODO A4 -- join every thread, then add the partials up in thread order
-     * (0, 1, 2, ...).  Free what you allocated. */
-    double total = 0.0;
-    (void)nthreads;
-
-    *sum_out   = now_sec() - t1;
-    *total_out = total;
-=======
     //this will setup the thread array and the structs
     pthread_t workers[nthreads];
     targ_t *setters = malloc(nthreads * sizeof(targ_t));
@@ -142,7 +117,6 @@ static int run_once(double *x, long n, int nthreads,
     (void)nthreads;
     *total_out = total;
     free(setters);
->>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     return 0;
 }
 
@@ -150,10 +124,6 @@ int main(int argc, char **argv)
 {
     long n = 20000000;
     int nthreads = 1, reps = 3;
-<<<<<<< HEAD
-
-=======
->>>>>>> bbfbb2375de987274431c1b7bbefbceb18431f64
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--threads") && i + 1 < argc)    nthreads = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--n") && i + 1 < argc)     n        = atol(argv[++i]);

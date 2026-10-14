@@ -14,7 +14,7 @@
 
 static void *show(void *arg)
 {
-    int id = (int)(intptr_t)arg;
+    int id = (intptr_t)arg;
     printf("thread index %d\n", id);
     return NULL;
 }

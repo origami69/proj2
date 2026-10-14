@@ -1,7 +1,9 @@
 # PA2 analysis
 Group 5: Arturo Becerra, Dylan Ward, Jonathan Brion, Damien Maristela, Xavier Guerrero
-Anyone outside your group you discussed this with:
-AI assistance (tool, and what you used it for; write "none" if none):
+Anyone outside your group you discussed this with: nobody
+AI assistance (tool, and what you used it for; write "none" if none): 
+Google Gemini; to explain errors and how existing code works (like what all the argument slots 
+of a function mean)
 
 ---
 

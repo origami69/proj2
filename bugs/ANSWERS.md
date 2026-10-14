@@ -11,6 +11,7 @@ show doesn't look at a changing memory address and instead a static value.
 Helpful Resources:
 https://learn.microsoft.com/en-us/answers/questions/227662/what-is-the-differences-between-int*-and-intptr
 https://stackoverflow.com/questions/153065/converting-a-pointer-into-an-integer
+https://stackoverflow.com/questions/22624737/casting-a-pointer-to-an-int
 
 ## bug2_nojoin.c
 Defect: Main would keep going before some of the threads could finish executing, meaning they didnt get to 1000 yet.
@@ -20,8 +21,10 @@ https://stackoverflow.com/questions/11624545/how-to-make-main-thread-wait-for-al
 https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
 
 ## bug3_stack.c
-Defect: 
-Fix: 
+Defect: compute() would pass the the memory address of a local variable back to main, but since its local it would
+get destroyed before main could use it.
+Fix: Change the pass by reference to a pass by value using the same method in bug1_args; cast it to intptr and then
+back into a pointer so it doesn't disappear when the local stack is gone.
 
 ## bug4_errno.c
 Defect:

@@ -10,6 +10,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include <pthread.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define N 4
 
@@ -17,7 +18,7 @@ static void *compute(void *arg)
 {
     long k = (long)arg;
     long answer = (k + 1) * 100;
-    return &answer;
+    return (void *)(intptr_t)answer;
 }
 
 int main(void)
@@ -29,7 +30,7 @@ int main(void)
     for (int k = 0; k < N; k++) {
         void *ret;
         pthread_join(t[k], &ret);
-        printf("thread %d returned %ld\n", k + 1, *(long *)ret);
+        printf("thread %d returned %ld\n", k + 1, (intptr_t)ret);
     }
     return 0;
 }

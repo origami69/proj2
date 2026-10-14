@@ -17,7 +17,8 @@ static long slot[N];
 static void *add_mine(void *arg)
 {
     long k = (long)arg;
-    for (int i = 0; i < 1000; i++) slot[k]++;
+    for (int i = 0; i < 1000; i++) 
+        slot[k]++;
     return NULL;
 }
 
@@ -27,8 +28,12 @@ int main(void)
     for (long k = 0; k < N; k++)
         pthread_create(&t[k], NULL, add_mine, (void *)k);
 
+    for (long k = 0; k < N; k++)
+        pthread_join(t[k], NULL);
+
     long total = 0;
-    for (int k = 0; k < N; k++) total += slot[k];
+    for (int k = 0; k < N; k++) 
+        total += slot[k];
     printf("total %ld (expected 4000)\n", total);
     return 0;
 }

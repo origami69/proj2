@@ -1,5 +1,6 @@
 # PA2 analysis — <your name>
 
+
 Group members (all names, or write "working alone"):
 Anyone outside your group you discussed this with:
 AI assistance (tool, and what you used it for; write "none" if none):

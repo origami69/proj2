@@ -1,7 +1,5 @@
-# PA2 analysis — <your name>
-
-
-Group members (all names, or write "working alone"):
+# PA2 analysis
+Group 5: Arturo Becerra, Dylan Ward, Jonathan Brion, Damien Maristela, Xavier Guerrero
 Anyone outside your group you discussed this with:
 AI assistance (tool, and what you used it for; write "none" if none):
 

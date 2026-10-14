@@ -1,4 +1,5 @@
 # PA2 — tsum: doing one job with many threads
+Group 5: Arturo Becerra, Dylan Ward, Jonathan Brion, Damien Maristela, Xavier Guerrero
 
 Read `PA2_instructions.pdf` on Canvas for the full assignment. This file is the
 short version.

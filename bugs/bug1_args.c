@@ -8,12 +8,13 @@
 #define _POSIX_C_SOURCE 200809L
 #include <pthread.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define N 4
 
 static void *show(void *arg)
 {
-    int id = *(int *)arg;
+    int id = (int)(intptr_t)arg;
     printf("thread index %d\n", id);
     return NULL;
 }
@@ -22,7 +23,7 @@ int main(void)
 {
     pthread_t t[N];
     for (int i = 0; i < N; i++)
-        pthread_create(&t[i], NULL, show, &i);
+        pthread_create(&t[i], NULL, show, (void *)(intptr_t)i);
     for (int i = 0; i < N; i++)
         pthread_join(t[i], NULL);
     return 0;

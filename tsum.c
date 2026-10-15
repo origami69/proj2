@@ -1,23 +1,3 @@
-/*
- * PA2 Part A  --  tsum: one job, many threads.
- *
- * The program does its work in two phases:
- *
- *   Phase 1 (serial)    fill x[i] = sin(i).  You may NOT thread this phase.
- *                       It is here on purpose: it is the serial fraction that
- *                       Amdahl's law is about, and Part D asks you to measure it.
- *
- *   Phase 2 (parallel)  compute the sum of work(x[i]) using T threads.
- *
- * Thread k owns the half-open range [lo, hi) and writes its partial sum into
- * ITS OWN slot.  No two threads touch the same memory, so there is no shared
- * counter and you need no mutex, no semaphore and no condition variable.
- * Partitioning the data instead of locking it is the whole point of Part A.
- *
- * Build:  make
- * Run:    ./tsum --threads 4
- *         ./tsum --threads 4 --n 20000000 --reps 3
- */
 #define _POSIX_C_SOURCE 200809L
 #include <pthread.h>
 #include <stdio.h>
@@ -33,8 +13,6 @@ static double now_sec(void)
     return (double)ts.tv_sec + 1e-9 * (double)ts.tv_nsec;
 }
 
-/* The per-element work of phase 2.  Do NOT change this function.  The grader
- * compares your total against the reference, and any change here changes it. */
 static double work(double v)
 {
     double a = sqrt(fabs(v));
@@ -44,9 +22,6 @@ static double work(double v)
     return a;
 }
 
-/* The argument struct handed to each thread.  Every thread gets its OWN
- * struct.  Handing all threads a pointer to the same object, or a pointer to
- * the loop counter, is Bug 1 in Part B. */
 typedef struct {
     const double *x;
     long   lo;        /* first index this thread owns          */
@@ -54,12 +29,6 @@ typedef struct {
     double partial;   /* this thread writes here and nowhere else */
 } targ_t;
 
-/* TODO A1 -- the thread start routine.
- * The signature must be exactly  void *name(void *arg).
- * Cast arg back to targ_t *, sum work(x[i]) for i in [lo, hi) into a local
- * double, store it in arg->partial, and return NULL.
- * Accumulate into a LOCAL variable, not directly into arg->partial: the local
- * stays in a register and the struct field does not. */
 static void *sum_range(void *arg)
 {
     targ_t *data = (targ_t *)arg;
@@ -71,8 +40,6 @@ static void *sum_range(void *arg)
     return NULL;
 }
 
-/* Runs both phases once.  Returns the total through *total_out and the two
- * phase times through *fill_out and *sum_out. */
 static int run_once(double *x, long n, int nthreads,
                     double *fill_out, double *sum_out, double *total_out)
 {
@@ -109,6 +76,7 @@ static int run_once(double *x, long n, int nthreads,
             return -1;
         }
     }
+    //go through each thread squentially from 0 the nth nthread count and add each partial to total
     double total = 0.0;
     for (int i = 0; i < nthreads; i++){
         total += setters[i].partial;
@@ -138,9 +106,6 @@ int main(int argc, char **argv)
     double *x = malloc((size_t)n * sizeof *x);
     if (!x) { fprintf(stderr, "tsum: cannot allocate %ld doubles\n", n); return 1; }
 
-    /* Keep the FASTEST COMPLETE REPETITION, not the fastest fill and the
-     * fastest sum from different repetitions -- those two minima can come from
-     * different runs, and their sum is then a time no run actually took. */
     double best_wall = 0.0, best_fill = 0.0, best_sum = 0.0, total = 0.0;
     for (int r = 0; r < reps; r++) {
         double f, s, t;
@@ -151,8 +116,6 @@ int main(int argc, char **argv)
         }
     }
 
-    /* The fastest of several runs, not the average: a slow run means something
-     * else was using the CPU, which is noise, not a property of your code. */
     printf("threads   %d\n", nthreads);
     printf("n         %ld\n", n);
     printf("reps      %d\n", reps);

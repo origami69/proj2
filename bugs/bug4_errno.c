@@ -47,11 +47,12 @@ static int create_worker(pthread_t *t, void *(*fn)(void *), void *arg)
     return pthread_create(t, NULL, fn, arg);
 }
 
+/* //Original code
 int main(void)
 {
     pthread_t t;
     void *ret = NULL;
-    long result = -1;                  /* -1 means: nothing was received */
+    long result = -1;
 
     if (create_worker(&t, worker, NULL) == -1) {
         fprintf(stderr, "bug4: create_worker failed: %s\n", strerror(errno));
@@ -67,4 +68,34 @@ int main(void)
 
     printf("the worker returned %ld\n", result);
     return 0;
+}
+*/
+
+int main(void)
+{
+    pthread_t t; //store thread id
+    void *ret = NULL; //store returned pointer
+    long result = -1; //default if no result received
+
+    int rc = create_worker(&t, worker, NULL); //creating thread
+
+    if (rc != 0) { //check return code for failure
+        fprintf(stderr, "bug4: create_worker failed: %s\n", strerror(rc)); //print error
+        return 1; //exit without using invalid result
+    }
+
+    printf("thread created with no error\n"); //creation succeeded
+
+    rc = pthread_join(t, &ret); //wait for worker and get result
+
+    if (rc != 0) { //check if join failed
+        fprintf(stderr, "bug4: pthread_join failed: %s\n", strerror(rc));
+        return 1;
+    }
+
+    if (ret != NULL)
+        result = *(long *)ret; //read returned value
+
+    printf("the worker returned %ld\n", result); //print
+    return 0; //end
 }

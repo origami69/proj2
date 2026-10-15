@@ -9,15 +9,16 @@
 #include <pthread.h>
 #include <stdio.h>
 
-#define N 4
+#define N 4 //num of threads
 
-static void *show(void *arg)
+static void *show(void *arg) //executed by each thread
 {
-    int id = *(int *)arg;
-    printf("thread index %d\n", id);
-    return NULL;
+    int id = *(int *)arg; //convert to int, then dereference to get the value
+    printf("thread index %d\n", id); //print
+    return NULL; //end thread
 }
 
+/* //Original code 
 int main(void)
 {
     pthread_t t[N];
@@ -26,4 +27,20 @@ int main(void)
     for (int i = 0; i < N; i++)
         pthread_join(t[i], NULL);
     return 0;
+}
+*/
+
+int main(void)
+{
+    pthread_t t[N]; //array to store the 4 thread ids
+    int ids[N]; //array to hold thread indices
+
+    for (int i = 0; i < N; i++) { //loop 4 times
+        ids[i] = i; //store current index
+        pthread_create(&t[i], NULL, show, &ids[i]); //create thread, pass address to its own index
+    }
+    for (int i = 0; i < N; i++) //loop 4 times (wait for threads to finish)
+        pthread_join(t[i], NULL);
+
+    return 0; //end program
 }

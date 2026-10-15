@@ -46,8 +46,8 @@ of a function mean)
 instead if the mapping were many-to-one.
 
 The mapping is one to one since can see each thread being created even including main getting its own thread.
-
 If this was a many to then we would see the BEFORE and AFTER being equal to 1 and the DIFFERENCE being 0 since all the threads connect to 1 thread on the system.
+
 ---
 
 ## Part D — measurements

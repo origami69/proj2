@@ -27,5 +27,11 @@ Fix: Change the pass by reference to a pass by value using the same method in bu
 back into a pointer so it doesn't disappear when the local stack is gone.
 
 ## bug4_errno.c
-Defect:
-Fix:
+Defect: We would return a success even though inside the create worker function when we run with an env we should return a error
+ if (getenv("CS433_FAIL_CREATE") != NULL) {
+        int rc = pthread_create(t, NULL, idle, NULL);
+        return (rc == 0) ? EAGAIN : rc;
+    }
+if we have an env we should return EAGAIN whenever the thread creates successfully otherwise if we get a real error then we report that real error(EAGAIN is error number 11 reporting Insufficient resources to create another thread)
+Fix: 
+Instead of checking for errors by checking if join and create equal -1 we should compare if join and create do not equal 0 since 0 represents a successful run and we can have many types of errors not just -1 and checking if we dont run succesfully will alllow us to catch the error better 

@@ -35,7 +35,7 @@ of a function mean)
     4
 - Does the difference match the number you asked for?
     Yes indeed I ran ./tcount --threads 4 
-**System 2** (optional but recommended — the course server and your laptop)
+-**System 2** (optional but recommended — the course server and your laptop)
     I DONT WANNA DO THE SCHOOL SERVER SINCE I DONT WANNA GET THE VPN
 - Machine and OS:
 - Command used:

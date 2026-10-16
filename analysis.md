@@ -9,7 +9,7 @@ of a function mean)
 
 ## Part C — can the kernel see your threads?
 
-**System 1**
+**System 1: Arturo Becerra**
 - Machine and OS: WSL2:
     - uname 
         Linux DESKTOP-J2D4250 6.18.54.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux

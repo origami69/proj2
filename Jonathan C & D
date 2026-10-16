@@ -1,0 +1,84 @@
+# PA2 analysis
+Group 5: Arturo Becerra, Dylan Ward, Jonathan Brion, Damien Maristela, Xavier Guerrero
+Anyone outside your group you discussed this with: nobody
+AI assistance (tool, and what you used it for; write "none" if none): 
+Google Gemini; to explain errors and how existing code works (like what all the argument slots 
+of a function mean)
+
+---
+
+#JONATHAN'S C AND D ANSWERS
+
+## Part C — can the kernel see your threads?
+
+**System 1** << used method 2>>
+
+- Machine and OS: DESKTOP-CBNVMPH, Linux (x86_64), Intel Core i9-9900KF
+- Command used to count threads: ./tcount --threads 4 & PID=$!; sleep 1; echo "before:  $(ls /proc/$PID/task | wc -l)"; sleep 4; echo "after: $(ls /proc/$PID/task | wc -l)";
+- Threads before the pthread_create calls: 1
+- Threads after: 5
+- Difference: 4
+- Does the difference match the number you asked for? 
+
+Yes.
+
+**System 2** (optional but recommended — the course server and your laptop)
+
+- Machine and OS:
+- Command used:
+- Before / after / difference:
+
+**One-to-one or many-to-one?** Two sentences. Say what you would have seen
+instead if the mapping were many-to-one.
+
+The command shows it is one-to-one because when 4 threads were created with --threads 4, 4 new threads that wrre visible to the kernel were exactly made. If it were many-to one, the number of threads visible to the kernel will still remain at 1 while the program ran.
+
+---
+
+## Part D — measurements
+
+Machine used for the timings: DESKTOP-CBNVMPH, Linux (x86_64), Intel Core i9-9900KF
+Core count, and the command you got it from:  8, lscpu
+Plugged in, or on battery: Plugged in
+
+### Speedup table
+
+`--n 20000000 --reps 3`. Speedup is against your own 1-thread run.
+
+| threads | fill_s | sum_s | wall_s | sum-phase speedup | whole-program speedup |
+|---|---|---|---|---|---|
+| 1 |0.1705 | 0.7602| 0.9307 | 1.0000 | 1.0000 |
+| 2 |0.1719 | 0.3958 |0.5677 | 1.9207 | 1.6394 |
+| 4 | 0.1729| 0.2195| 0.3924 | 3.4633 | 2.3718|
+| 8 | 0.1703| 0.1285| 0.2988 | 5.9160 | 3.1148|
+| 16 threads, 8 (cores) | 0.1691| 0.0738| 0.2428| 10.3008| 3.8332|
+
+### The serial fraction
+
+- S = fill_s / wall_s at one thread = 0.1832
+- Amdahl ceiling = 1 / S = 1/0.1832 = 5.4587 x
+
+### The four questions
+
+**1. Your measured S, and the ceiling it implies. 
+
+My measured S, or serial fraction is 0.1832, or 18.32% of the program is non-splitable between threads. It implies that the theoretical ceiling of speedup of the program we can get is 5.4587 times speedup.
+
+**2. What whole-program speedup did you actually reach at the core count? How
+far below the ceiling, and one reason for the gap.
+
+At core count 8, my whole program speedup is 3.1148 times faster, which is 2.3439 units less than the maximum theoretical speedup amount. One reason for the gap is because some of work includes creating and joining threads, which can take extra time.
+
+**3. Why is the sum-phase speedup so much better than the whole-program
+speedup? Which one would a user of this program notice?
+
+Sum-space speedup is alot better than whole-program speedup because the sum-space speedup measures only the part of the program that gets divided among threads, which will result in faster speeds. However, the whole-program speedup measures the entire program, which includes work that cannot be split amongst threads. Additionally, the whole program speedup would be the measurement that the user would notice as it takes into account the entire program.
+
+**4. Why does `total` change in its last digits when the thread count changes,
+and why is that not a bug?
+
+The last digits of total change when thread count changes because the values the program adds together are floating point numbers with a large amount of digits after the decimal point. And when the thread count changes, different values may be distributed amongst the threads in a different order, which means that values may be added together in different orders. As a result, rounding the new values may differ across thread counts with different groupings. Which is why there is some variance in the last digits of total with different number of threads, but the range is still very very close to each other. It is not a bug if the value of total is consistently within a very close range with each of the others.
+
+---
+
+## Stretch (only if you did it)

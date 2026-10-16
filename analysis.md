@@ -35,12 +35,6 @@ of a function mean)
     4
 - Does the difference match the number you asked for?
     Yes indeed I ran ./tcount --threads 4
-  
-**System 2** (optional but recommended — the course server and your laptop)
-    I DONT WANNA DO THE SCHOOL SERVER SINCE I DONT WANNA GET THE VPN
-- Machine and OS:
-- Command used:
-- Before / after / difference:
 
 **One-to-one or many-to-one?** Two sentences. Say what you would have seen
 instead if the mapping were many-to-one.
@@ -184,6 +178,4 @@ and why is that not a bug?
 
 The last digits of total change when thread count changes because the values the program adds together are floating point numbers with a large amount of digits after the decimal point. And when the thread count changes, different values may be distributed amongst the threads in a different order, which means that values may be added together in different orders. As a result, rounding the new values may differ across thread counts with different groupings. Which is why there is some variance in the last digits of total with different number of threads, but the range is still very very close to each other. It is not a bug if the value of total is consistently within a very close range with each of the others.
 
----
 
-## Stretch (only if you did it)

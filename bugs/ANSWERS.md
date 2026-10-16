@@ -21,18 +21,21 @@ https://stackoverflow.com/questions/11624545/how-to-make-main-thread-wait-for-al
 https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
 
 ## bug3_stack.c
-Defect: compute() would pass the the memory address of a local variable back to main, but since its local it would
-get destroyed before main could use it.
+Defect: compute() would pass the the memory address of answer back to main, but since it's a local variable on the 
+worker thread's stack, it would get destroyed when the thread finishes before main could use it.
 Fix: Change the pass by reference to a pass by value using the same method in bug1_args; cast it to intptr and then
 back into a pointer so it doesn't disappear when the local stack is gone.
 
 ## bug4_errno.c
-Defect: We would return a success even though inside the create worker function when we run with an env we should return a error
- if (getenv("CS433_FAIL_CREATE") != NULL) {
-        int rc = pthread_create(t, NULL, idle, NULL);
-        return (rc == 0) ? EAGAIN : rc;
-    }
-if we have an env we should return EAGAIN whenever the thread creates successfully otherwise if we get a real error then we report that real error(EAGAIN is error number 11 reporting Insufficient resources to create another thread)
+Defect: We were checking for a '-1' result, but the pthread function would return errors directly, marking any
+return that was not '-1' as a success when it should have been a failure.
 Fix: 
-Instead of checking for errors by checking if join and create equal -1 we should compare if join and create do not equal 0 since 0 represents a successful run and we can have many types of errors not just -1 and checking if we dont run succesfully will alllow us to catch the error better 
-Then we can save the outputs of create worker and join in the result variable and print the string error of that variable since we create and join do use errno but returns the errors by themselves.
+Instead of checking for errors by checking if create and join equal -1, we should compare if they do not equal 0. 
+Zero represents a successful run and we can have many types of errors beyond just -1, so changing it to !0 throws 
+an error for anything that isn't the normal result. We can also save the output in the result variable and print 
+the a string error of that variable, letting us know the specific one.
+Instead of checking for errors by checking if join and create equal -1 we should compare if join and create do not 
+equal 0 since 0 represents a successful run and we can have many types of errors not just -1 and checking if we 
+dont run succesfully will alllow us to catch the error better 
+Then we can save the outputs of create worker and join in the result variable and print the string error of that 
+variable since we create and join do use errno but returns the errors by themselves.

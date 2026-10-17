@@ -59,7 +59,7 @@ static int run_once(double *x, long n, int nthreads,
         setters[i].lo = ((long)i * n) / nthreads;
         setters[i].hi = ((long)(i + 1) * n) / nthreads;
         setters[i].x = x;
-        //make thread and see if made succesfully according to section 4.6
+        //make thread and see if made succesfully according to section 4.6, input is pthreadm attributes, routine to run, and arguments to pass
         rc = pthread_create(&workers[i], NULL, sum_range, &setters[i]);
         if(rc != 0){
             fprintf(stderr, "tsum: pthread_create for thread %d: %s\n", i, strerror(rc));

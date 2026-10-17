@@ -34,9 +34,8 @@ static void *sum_range(void *arg)
     targ_t *data = (targ_t *)arg;
     double partial = 0;
     const double *get = data->x;
-    int i = data->lo;
     int limiter = data->hi;
-    for (i; i < limiter; i++){
+    for (int i = data->lo; i < limiter; i++){
         partial += work(get[i]);
     }
     data->partial = partial;
